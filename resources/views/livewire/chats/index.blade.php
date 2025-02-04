@@ -64,27 +64,31 @@
                         @endif
                     </div>
                 @empty
-                    <div class="bg-white dark:bg-gray-700 shadow-md rounded-lg py-4">
-                        <div class="flex items-center gap-3 px-4">
-                            <p class="text-gray-500 dark:text-gray-400">No chats found</p>
+                    @if ($room !== null)
+                        <div class="bg-white dark:bg-gray-700 shadow-md rounded-lg py-4">
+                            <div class="flex items-center gap-3 px-4">
+                                <p class="text-gray-500 dark:text-gray-400">No chats found</p>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 @endforelse
             </div>
         </div>
-        <div class="mt-4">
-            <form wire:submit="sendMessage">
-                <div class="flex items-center gap-3">
-                    <input type="text" wire:model="message" class="w-full rounded-lg border-gray-300"/>
-                    <button type="submit"
-                            wire:loading.attr="disabled"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center"
-                            :disabled="$wire.message==='' || $wire.isLoading">
-                        <span wire:loading.remove wire:target="sendMessage" class="flex items-center">Send</span>
-                        <span wire:loading wire:target="sendMessage" class="send-loader-spinner"></span>
-                    </button>
-                </div>
-            </form>
-        </div>
+        @if ($room !== null)
+            <div class="mt-4">
+                <form wire:submit="sendMessage">
+                    <div class="flex items-center gap-3">
+                        <input type="text" wire:model="message" class="w-full rounded-lg border-gray-300"/>
+                        <button type="submit"
+                                wire:loading.attr="disabled"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center"
+                                :disabled="$wire.message==='' || $wire.isLoading">
+                            <span wire:loading.remove wire:target="sendMessage" class="flex items-center">Send</span>
+                            <span wire:loading wire:target="sendMessage" class="send-loader-spinner"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        @endif
     </div>
 </div>
