@@ -4,10 +4,20 @@
             <div class="flex items-center gap-3">
                 @if ($room !== null)
                     <figure
-                        class="rounded h-10 w-10 flex-shrink-0 transition-opacity group-hover:opacity-90 {{ $room->user->profile }}">
+                            class="rounded h-10 w-10 flex-shrink-0 transition-opacity group-hover:opacity-90 {{ $room->user->profile }}">
                         <img src="{{ $room->user->profile }}" alt="{{ $room->user->name }}" class="rounded h-10 w-10"/>
                     </figure>
                     <p class="text-xl font-bold text-gray-800 dark:text-gray-100">{{ $room->name }}</p>
+                    @if($room->user_id==auth()->user()->id)
+                        <button type="button"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded flex items-center justify-center">
+                            Change Name
+                        </button>
+                        <button type="button"
+                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded flex items-center justify-center">
+                            Delete Group
+                        </button>
+                    @endif
                 @else
                     <p class="text-xl font-bold text-gray-800 dark:text-gray-100">
                         Please select room.
