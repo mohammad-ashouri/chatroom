@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.send-loader-spinner {
+    animation: rotate 0.8s infinite;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+}
+
+.send-loader-spinner:before,
+.send-loader-spinner:after {
+    border-radius: 50%;
+    content: "";
+    display: block;
+    height: 8px;
+    width: 8px;
+}
+
+.send-loader-spinner:before {
+    animation: ball1 0.8s infinite;
+    background-color: #fff;
+    box-shadow: 10px 0 0 #3b82f6;
+    margin-bottom: 0;
+}
+
+.send-loader-spinner:after {
+    animation: ball2 0.8s infinite;
+    background-color: #3b82f6;
+    box-shadow: 10px 0 0 #fff;
+}
+
+/* انیمیشن rotate */
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg) scale(0.6);
+    }
+    50% {
+        transform: rotate(360deg) scale(1);
+    }
+    100% {
+        transform: rotate(720deg) scale(0.6);
+    }
+}
+
+/* انیمیشن ball1 */
+@keyframes ball1 {
+    0% {
+        box-shadow: 10px 0 0 #3b82f6;
+    }
+    50% {
+        box-shadow: 0 0 0 #3b82f6;
+        transform: translate(5px, 5px);
+    }
+    100% {
+        box-shadow: 10px 0 0 #3b82f6;
+    }
+}
+
+/* انیمیشن ball2 */
+@keyframes ball2 {
+    0% {
+        box-shadow: 10px 0 0 #fff;
+    }
+    50% {
+        box-shadow: 0 0 0 #fff;
+        transform: translate(5px, 5px);
+    }
+    100% {
+        box-shadow: 10px 0 0 #fff;
+    }
+}
