@@ -25,9 +25,24 @@
                     <p class="text-xl font-bold text-gray-800 dark:text-gray-100">{{ $room->name }}</p>
                     @if($room->user_id==auth()->user()->id)
                         <button type="button"
+                                wire:click="$dispatch('open-modal', 'rename-room')"
                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded flex items-center justify-center">
                             Change Name
                         </button>
+                        <x-modal name="rename-room">
+                            <div class="p-4">
+                                <div class="flex items-center justify-between">
+                                    <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 leading-tight">
+                                        Rename Room
+                                    </h2>
+                                    <button x-on:click="$dispatch('close-modal', 'rename-room')"
+                                            class="text-gray-500 dark:text-gray-400">
+                                        <x-icons.x class="h-6 w-6"/>
+                                    </button>
+                                </div>
+                                <livewire:rooms.rename :room_id="$room->id"/>
+                            </div>
+                        </x-modal>
                         <button type="button"
                                 wire:click="$dispatch('open-modal', 'delete-room')"
                                 class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded flex items-center justify-center">

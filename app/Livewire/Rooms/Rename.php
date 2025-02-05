@@ -1,19 +1,22 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Livewire\Rooms;
 
 use App\Models\Room;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 
-class Delete extends Component
+class Rename extends Component
 {
     /**
      * Room id variable
      */
     public ?int $room_id;
 
+    #[Validate([
+        "required",
+    ])]
+    public string $room_name;
     /**
      * Listeners
      *
@@ -22,14 +25,6 @@ class Delete extends Component
     protected $listeners = [
         'room-selected' => 'roomSelected',
     ];
-
-    /**
-     * Select room id after user selecting room in sidebar
-     */
-    public function roomSelected($id): void
-    {
-        $this->room_id = $id;
-    }
 
     /**
      * Set room id after refresh or ...
@@ -44,21 +39,32 @@ class Delete extends Component
     }
 
     /**
-     * Delete room
+     * Select room id after user selecting room in sidebar
      */
-    public function deleteRoom(): void
+    public function roomSelected($id): void
+    {
+        $this->room_name = Room::find($id)->name;
+    }
+
+    /**
+     * Rename room
+     */
+    public function renameRoom(): void
     {
         if ($this->room_id) {
             $room = Room::where('id', $this->room_id)
                 ->where('user_id', auth()->user()->id)
                 ->first();
 
-            if (!empty($room)) {
-                $room->delete();
-                $this->dispatch('modal-message', 'Room deleted successfully.');
+            if ($room) {
+                $room->name = $this->room_name;
+                $room->save();
+                $this->dispatch('close-modal', 'rename-room');
+                $this->dispatch('modal-message', 'Room renamed successfully.');
             } else {
-                $this->dispatch('modal-message', 'Error on deleting room.');
+                $this->dispatch('modal-message', 'Error on renaming room.');
             }
         }
+
     }
 }

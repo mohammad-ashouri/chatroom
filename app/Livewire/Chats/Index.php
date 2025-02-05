@@ -69,8 +69,6 @@ class Index extends Component
 
     public function render(): View
     {
-        // add 10 chats to the database with the factory
-        // Chat::factory()->count(10)->create(['room_id' => $this->roomId]); // only uncomment once
         $this->isLoading = false;
         return view('livewire.chats.index', [
             'room' => $this->room,
