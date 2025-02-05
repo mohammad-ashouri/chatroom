@@ -30,11 +30,13 @@ class Rename extends Component
      * Set room id after refresh or ...
      * @return void
      */
-    public function mount(): void
+    public function boot(): void
     {
         if (request()->query('roomId')) {
             $roomId = request()->query('roomId');
             $this->roomSelected((int)$roomId);
+        } else {
+            $this->roomSelected($this->room_id);
         }
     }
 
@@ -43,6 +45,7 @@ class Rename extends Component
      */
     public function roomSelected($id): void
     {
+        $this->room_id = $id;
         $this->room_name = Room::find($id)->name;
     }
 
