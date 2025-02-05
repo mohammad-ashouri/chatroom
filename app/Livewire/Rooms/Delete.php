@@ -8,17 +8,39 @@ use Livewire\Component;
 
 class Delete extends Component
 {
+    /**
+     * Room id variable
+     * @var int|null
+     */
     public ?int $room_id;
 
-    public function mount($room_id = null)
+    /**
+     * Listeners
+     * @var string[]
+     */
+    protected $listeners=[
+        'room-selected'=>'roomSelected',
+    ];
+
+    /**
+     * Select room id after user selecting room in sidebar
+     * @param $id
+     * @return void
+     */
+    public function roomSelected($id): void
     {
-        $this->room_id = $room_id;
+        $this->room_id = $id;
     }
 
-    public function deleteRoom()
+    /**
+     * Delete room
+     * @return void
+     */
+    public function deleteRoom(): void
     {
-        Room::findOrFail($this->room_id)->delete();
-        $this->dispatch('close-modal', 'delete-room');
-        session()->flash('message', 'Room deleted successfully.');
+        if ($this->room_id) {
+            Room::findOrFail($this->room_id)->delete();
+            session()->flash('message', 'Room deleted successfully.');
+        }
     }
 }

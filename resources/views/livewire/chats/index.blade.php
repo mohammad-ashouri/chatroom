@@ -29,7 +29,6 @@
                                         <x-icons.x class="h-6 w-6" />
                                     </button>
                                 </div>
-
                                 <livewire:rooms.delete :room_id="$room->id" />
                             </div>
                         </x-modal>
