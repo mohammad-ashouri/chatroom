@@ -21,7 +21,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read User $user
  * @property-read Room $room
- * @property-read boolean $is_read
+ * @property boolean $is_read
+ * @property boolean $is_visible
  */
 class Chat extends Model
 {

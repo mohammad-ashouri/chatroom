@@ -11,6 +11,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 use function Laravel\Prompts\alert;
 
@@ -54,11 +55,15 @@ class Index extends Component
         $this->roomId = $id;
     }
 
-    public function sendMessage()
+    /**
+     * Send message
+     * @return void
+     */
+    public function sendMessage(): void
     {
         $this->isLoading = true;
         $this->validate();
-        Chat::query()->create([
+        $chat = Chat::query()->create([
             'user_id' => auth()->id(),
             'room_id' => $this->roomId,
             'message' => $this->message
@@ -67,12 +72,41 @@ class Index extends Component
         $this->isLoading = false;
     }
 
+    /**
+     * Dispatch chat id
+     * @param $chat_id
+     * @return void
+     */
+    public function dispatchChatId($chat_id): void
+    {
+        $chat = Chat::where('id', $chat_id)->where('user_id', auth()->id())->firstOrFail();
+        if (empty($chat)) {
+            $this->messageModal = 'Access Forbidden';
+            $this->dispatch('open-modal', 'messages-modal');
+        } else {
+            $this->dispatch('chat-id', $chat->id);
+        }
+    }
+
     public function render(): View
     {
         $this->isLoading = false;
         return view('livewire.chats.index', [
             'room' => $this->room,
-            'chats' => $this->room !== null ? Chat::query()->where('room_id', $this->roomId)->get() : [],
+            'chats' => $this->room !== null ? Chat::query()
+                ->where('room_id', $this->roomId)
+                ->where('is_visible', false)
+                ->whereNot(function ($query) {
+                    $query->where('user_id', auth()->id())
+                        ->where('is_visible', true);
+                })
+                ->orWhere(function ($query) {
+                    $query->where('room_id', $this->roomId)
+                        ->where('is_visible', true)
+                        ->where('user_id', '!=', auth()->id());
+                })
+                ->orderBy('created_at')
+                ->get() : [],
         ]);
     }
 }
