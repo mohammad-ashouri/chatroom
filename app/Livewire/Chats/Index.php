@@ -25,11 +25,20 @@ class Index extends Component
 
     public string $message = '';
 
-    public bool $isLoading ;
+    public bool $isLoading;
+
+    public ?string $messageModal = null;
 
     protected $rules = [
         'message' => 'required|string|min:1',
     ];
+
+    #[On('modal-message')]
+    public function setModalMessage($message): void
+    {
+        $this->messageModal = $message;
+        $this->dispatch('open-modal', 'messages-modal');
+    }
 
     #[Computed]
     public function room(): ?Room

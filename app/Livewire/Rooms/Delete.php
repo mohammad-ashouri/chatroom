@@ -1,31 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Rooms;
 
 use App\Models\Room;
-use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Delete extends Component
 {
     /**
      * Room id variable
-     * @var int|null
      */
     public ?int $room_id;
 
     /**
      * Listeners
+     *
      * @var string[]
      */
-    protected $listeners=[
-        'room-selected'=>'roomSelected',
+    protected $listeners = [
+        'room-selected' => 'roomSelected',
     ];
 
     /**
      * Select room id after user selecting room in sidebar
-     * @param $id
-     * @return void
      */
     public function roomSelected($id): void
     {
@@ -34,13 +33,16 @@ class Delete extends Component
 
     /**
      * Delete room
-     * @return void
      */
     public function deleteRoom(): void
     {
         if ($this->room_id) {
-            Room::findOrFail($this->room_id)->delete();
-            session()->flash('message', 'Room deleted successfully.');
+            $room = Room::where('id', $this->room_id)->where('user_id', auth()->user()->id)->first();
+            if (! empty($room)) {
+                $room->delete();
+                $this->dispatch('modal-message','Room deleted successfully.');
+            }
+            $this->dispatch('modal-message','Error on deleting room.');
         }
     }
 }

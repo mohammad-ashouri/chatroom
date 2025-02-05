@@ -1,10 +1,25 @@
 <div class="bg-white dark:bg-gray-800 w-3/4">
+    <x-modal-info name="messages-modal">
+        <div class="p-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 leading-tight">
+                    @if ($messageModal)
+                        {{ $messageModal }}
+                    @endif
+                </h2>
+                <button x-on:click="$dispatch('close-modal', 'messages-modal')"
+                        class="text-gray-500 dark:text-gray-400">
+                    <x-icons.x class="h-6 w-6"/>
+                </button>
+            </div>
+        </div>
+    </x-modal-info>
     <div class="container mx-auto px-4 py-4">
         <div class="flex justify-between items-center">
             <div class="flex items-center gap-3">
                 @if ($room !== null)
                     <figure
-                            class="rounded h-10 w-10 flex-shrink-0 transition-opacity group-hover:opacity-90 {{ $room->user->profile }}">
+                        class="rounded h-10 w-10 flex-shrink-0 transition-opacity group-hover:opacity-90 {{ $room->user->profile }}">
                         <img src="{{ $room->user->profile }}" alt="{{ $room->user->name }}" class="rounded h-10 w-10"/>
                     </figure>
                     <p class="text-xl font-bold text-gray-800 dark:text-gray-100">{{ $room->name }}</p>
@@ -26,10 +41,10 @@
                                     </h2>
                                     <button x-on:click="$dispatch('close-modal', 'delete-room')"
                                             class="text-gray-500 dark:text-gray-400">
-                                        <x-icons.x class="h-6 w-6" />
+                                        <x-icons.x class="h-6 w-6"/>
                                     </button>
                                 </div>
-                                <livewire:rooms.delete :room_id="$room->id" />
+                                <livewire:rooms.delete :room_id="$room->id"/>
                             </div>
                         </x-modal>
                     @endif
