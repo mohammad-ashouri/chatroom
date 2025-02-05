@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->foreignIdFor(User::class);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

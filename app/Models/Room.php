@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
@@ -19,14 +20,18 @@ use Illuminate\Support\Carbon;
  * @property int $user_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  * @property-read User $user
  * @property-read User[] $users
  * @property-read Chat[] $chats
  */
 class Room extends Model
 {
-    /** @use HasFactory<RoomFactory> */
-    use HasFactory;
+    /**
+     * @use SoftDeletes
+     * @use HasFactory<RoomFactory>
+     */
+    use HasFactory, SoftDeletes;
 
     /**
      * Get the user that owns the room.
