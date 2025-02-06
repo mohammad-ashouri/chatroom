@@ -39,11 +39,11 @@
                             </figure>
 
                             <div class="overflow-hidden text-sm dark:text-gray-100">
-                                <div class="flex items-center gap-2 justify-between">
-                                    <p class="truncate font-medium" title="{{ $room->name }}">
+                                <div class="flex items-center ">
+                                    <x-heroicon-m-user-group class="w-4 h-4 text-gray-500"/>
+                                    <p class="truncate font-medium ml-2" title="{{ $room->name }}">
                                         {{ $room->name }}
                                     </p>
-
                                 </div>
                                 <p class="truncate text-gray-500 dark:text-gray-400">
                                     {{ !empty($room->chats()->latest()->first()->message) ? $room->chats()->latest()->first()->message : 'No Messages' }}
