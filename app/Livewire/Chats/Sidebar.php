@@ -18,9 +18,17 @@ class Sidebar extends Component
     {
         return view('livewire.chats.sidebar', [
             'rooms' => Room::query()
-                ->whereRelation('users', 'users.id', auth()->id())
-                ->latest()
-                ->get(),
+                        ->whereRelation('users', 'users.id', auth()->id())
+                        ->with(['chats' => function ($query) {
+                            $query->latest('created_at');
+                        }])
+                        ->orderByRaw("COALESCE(
+                        (SELECT MAX(chats.created_at)
+                         FROM chats
+                         WHERE chats.room_id = rooms.id),
+                        rooms.created_at
+                    ) DESC")
+            ->get(),
         ]);
     }
 }
