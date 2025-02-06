@@ -120,6 +120,9 @@
                                                 Delete
                                             </button>
                                         @endif
+                                        <small class="dark:text-gray-400 text-sm sm:text-md">
+                                            {{ $chat->created_at->format('H:i') }}
+                                        </small>
                                         <div @class([
                                             'text-xs sm:text-sm bg-slate-100 dark:bg-gray-700 dark:text-gray-400 p-2',
                                             'rounded-tl-3xl rounded-bl-3xl rounded-br-xl' => $isCurrentUser,
