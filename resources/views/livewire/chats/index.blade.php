@@ -19,7 +19,7 @@
             <div class="flex items-center gap-3">
                 @if ($room !== null)
                     <figure
-                        class="rounded h-10 w-10 flex-shrink-0 transition-opacity group-hover:opacity-90 {{ $room->user->profile }}">
+                            class="rounded h-10 w-10 flex-shrink-0 transition-opacity group-hover:opacity-90 {{ $room->user->profile }}">
                         <img src="{{ $room->user->profile }}" alt="{{ $room->user->name }}" class="rounded h-10 w-10"/>
                     </figure>
                     <p class="text-xl font-bold text-gray-800 dark:text-gray-100">{{ $room->name }}</p>
@@ -86,7 +86,7 @@
             </div>
         </x-modal-info>
         <div
-             class="mt-4 h-[calc(100vh-210px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 flex flex-col-reverse">
+                class="mt-4 h-[calc(100vh-210px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 flex flex-col-reverse">
             <div class="flex flex-col gap-4">
                 @forelse ($chats as $chat)
                     @php($isCurrentUser = $chat->user->id === auth()->user()->id)
@@ -115,14 +115,14 @@
                                     <div class="relative group gap-2 flex items-center">
                                         @if($chat->user_id==auth()->user()->id)
                                             <button
-                                                wire:click="dispatchChatId({{$chat->id}})"
-                                                class="opacity-0 group-hover:opacity-100 transition-all duration-300 bg-red-500 text-white p-2 rounded-lg order-first">
+                                                    wire:click="dispatchChatId({{$chat->id}})"
+                                                    class="opacity-0 group-hover:opacity-100 transition-all duration-300 bg-red-500 text-white p-2 rounded-lg order-first">
                                                 Delete
                                             </button>
+                                            <small class="dark:text-gray-400 text-sm sm:text-md">
+                                                {{ $chat->created_at->format('H:i') }}
+                                            </small>
                                         @endif
-                                        <small class="dark:text-gray-400 text-sm sm:text-md">
-                                            {{ $chat->created_at->format('H:i') }}
-                                        </small>
                                         <div @class([
                                             'text-xs sm:text-sm bg-slate-100 dark:bg-gray-700 dark:text-gray-400 p-2',
                                             'rounded-tl-3xl rounded-bl-3xl rounded-br-xl' => $isCurrentUser,
@@ -132,6 +132,11 @@
                                                 {{ $chat->message }}
                                             </p>
                                         </div>
+                                        @if($chat->user_id!=auth()->user()->id)
+                                            <small class="dark:text-gray-400 text-sm sm:text-md">
+                                                {{ $chat->created_at->format('H:i') }}
+                                            </small>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
