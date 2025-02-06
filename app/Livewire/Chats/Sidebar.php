@@ -10,6 +10,7 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 
 #[On('echo:update-chat-rooms,UpdateChatRooms')]
+#[On('echo:update-room-chats,MessageSent')]
 #[On('room-created')]
 class Sidebar extends Component
 {
