@@ -9,6 +9,7 @@ use Illuminate\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
+#[On('echo:update-chat-rooms,UpdateChatRooms')]
 #[On('room-created')]
 class Sidebar extends Component
 {

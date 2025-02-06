@@ -90,7 +90,7 @@ class Index extends Component
         }
     }
 
-    #[On('echo:chat-room,MessageSent')]
+    #[On('echo:update-room-chats,MessageSent')]
     public function render(): View
     {
         $this->isLoading = false;

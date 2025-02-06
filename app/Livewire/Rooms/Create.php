@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Livewire\Rooms;
 
+use App\Events\MessageSent;
+use App\Events\UpdateChatRooms;
 use App\Models\User;
 use Illuminate\View\View;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
@@ -49,10 +52,9 @@ class Create extends Component
 
         $this->dispatch('room-created');
         $this->dispatch('room-selected', id: $room->id);
-
+        event(new UpdateChatRooms());
         $this->reset();
     }
-
     public function render(): View
     {
         return view('livewire.rooms.create', [
