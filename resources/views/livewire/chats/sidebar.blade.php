@@ -1,4 +1,4 @@
-<aside wire:poll.2000ms class="bg-white dark:bg-gray-800 w-1/4">
+<aside  class="bg-white dark:bg-gray-800 w-1/4">
     <div class="container mx-auto px-4 py-4">
         <div class="flex justify-between items-center">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Chats</h1>

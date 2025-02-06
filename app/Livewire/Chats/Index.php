@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Chats;
 
+use App\Events\MessageSent;
 use App\Models\Chat;
 use App\Models\Room;
 use Illuminate\View\View;
@@ -68,6 +69,7 @@ class Index extends Component
             'room_id' => $this->roomId,
             'message' => $this->message
         ]);
+        event(new MessageSent($chat));
         $this->reset('message');
         $this->isLoading = false;
     }
@@ -88,6 +90,7 @@ class Index extends Component
         }
     }
 
+    #[On('echo:chat-room,MessageSent')]
     public function render(): View
     {
         $this->isLoading = false;

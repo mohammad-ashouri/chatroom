@@ -85,7 +85,7 @@
                 <livewire:chats.delete/>
             </div>
         </x-modal-info>
-        <div wire:poll.2000ms
+        <div
              class="mt-4 h-[calc(100vh-210px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 flex flex-col-reverse">
             <div class="flex flex-col gap-4">
                 @forelse ($chats as $chat)
