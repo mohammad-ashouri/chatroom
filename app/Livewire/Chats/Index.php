@@ -35,6 +35,10 @@ class Index extends Component
         'message' => 'required|string|min:1',
     ];
 
+    protected $listeners = [
+        'echo:update-room-chats,MessageSent' => '$refresh'
+    ];
+
     #[On('modal-message')]
     public function setModalMessage($message): void
     {
@@ -90,7 +94,7 @@ class Index extends Component
         }
     }
 
-    #[On('echo:update-room-chats,MessageSent')]
+    #[On('')]
     public function render(): View
     {
         $this->isLoading = false;
