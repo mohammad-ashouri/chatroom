@@ -48,9 +48,24 @@
                                 <p class="truncate text-gray-500 dark:text-gray-400">
                                     {{ !empty($room->chats()->latest()->first()->message) ? $room->chats()->latest()->first()->message : 'No Messages' }}
                                 </p>
-                                <span class="text-xs text-gray-500 dark:text-gray-400 ml-auto">
-                                         {{ !empty($room->chats()->latest()->first()->message) ? $room->chats()->latest()->first()->created_at->diffForHumans() : ''}}
-                                    </span>
+                                <div x-data="{
+                                            lastChatTime: '{{ $room->chats()->latest()->first()?->created_at ?? null }}',
+                                            diff: '',
+                                            updateDiff() {
+                                                if (this.lastChatTime) {
+                                                    const parsedDate = dayjs(this.lastChatTime, 'YYYY-MM-DD HH:mm:ss');
+                                                    this.diff = parsedDate.fromNow();
+                                                } else {
+                                                    this.diff = '';
+                                                }
+                                            },
+                                            init() {
+                                                this.updateDiff();
+                                                setInterval(() => this.updateDiff(), 1000);
+                                            }
+                                        }" x-init="init">
+                                    <span class="text-xs text-gray-500 dark:text-gray-400 ml-auto" x-text="diff"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
