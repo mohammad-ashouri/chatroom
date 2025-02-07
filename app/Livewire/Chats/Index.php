@@ -7,6 +7,7 @@ namespace App\Livewire\Chats;
 use App\Events\MessageSent;
 use App\Models\Chat;
 use App\Models\Room;
+use App\Models\User;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Locked;
@@ -36,8 +37,19 @@ class Index extends Component
     ];
 
     protected $listeners = [
-        'echo:update-room-chats,MessageSent' => '$refresh'
+        // Static listeners go here
     ];
+
+    public function getListeners(): array
+    {
+        $listeners = [];
+
+        if ($this->roomId !== null) {
+            $listeners["echo:update-room-chats.$this->roomId,MessageSent"] = '$refresh';
+        }
+
+        return array_merge($this->listeners, $listeners);
+    }
 
     #[On('modal-message')]
     public function setModalMessage($message): void
@@ -73,7 +85,7 @@ class Index extends Component
             'room_id' => $this->roomId,
             'message' => $this->message
         ]);
-        event(new MessageSent($chat));
+        event(new MessageSent(auth()->user()->id,$chat->room_id));
         $this->reset('message');
         $this->isLoading = false;
     }
@@ -94,7 +106,6 @@ class Index extends Component
         }
     }
 
-    #[On('')]
     public function render(): View
     {
         $this->isLoading = false;
