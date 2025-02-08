@@ -79,4 +79,8 @@
             </div>
         </div>
     </div>
+    @script
+    <script>
+    </script>
+    @endscript
 </aside>

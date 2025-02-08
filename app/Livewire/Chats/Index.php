@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Chats;
 
 use App\Events\MessageSent;
+use App\Events\UpdateChatRooms;
 use App\Models\Chat;
 use App\Models\Room;
 use App\Models\User;
@@ -45,10 +46,22 @@ class Index extends Component
         $listeners = [];
 
         if ($this->roomId !== null) {
-            $listeners["echo:update-room-chats.$this->roomId,MessageSent"] = '$refresh';
+            $listeners["echo:update-room-chats.{$this->roomId},MessageSent"] = '$refresh';
+            $listeners["echo:update-chat-rooms.{$this->roomId},UpdateChatRooms"] = '$refresh';
         }
 
         return array_merge($this->listeners, $listeners);
+    }
+
+    public function updatedRoomId(): array
+    {
+        $this->listeners = [];
+        if ($this->roomId !== null) {
+            $listeners["echo:update-room-chats.{$this->roomId},MessageSent"] = '$refresh';
+            $listeners["echo:update-chat-rooms.{$this->roomId},UpdateChatRooms"] = '$refresh';
+            return array_merge($this->listeners, $listeners);
+        }
+        return [];
     }
 
     #[On('modal-message')]
@@ -70,6 +83,7 @@ class Index extends Component
     public function selectRoom(int $id): void
     {
         $this->roomId = $id;
+        $this->updatedRoomId();
     }
 
     /**
@@ -85,7 +99,8 @@ class Index extends Component
             'room_id' => $this->roomId,
             'message' => $this->message
         ]);
-        event(new MessageSent(auth()->user()->id,$chat->room_id));
+        event(new MessageSent(auth()->user()->id, $chat->room_id));
+        event(new UpdateChatRooms(auth()->user()->id, $chat->room_id));
         $this->reset('message');
         $this->isLoading = false;
     }

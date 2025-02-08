@@ -176,4 +176,8 @@
             </div>
         @endif
     </div>
+    @script
+    <script>
+    </script>
+    @endscript
 </div>

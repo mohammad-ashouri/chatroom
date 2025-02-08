@@ -12,6 +12,8 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 
 #[On('room-created')]
+#[On('room-selected')]
+
 class Sidebar extends Component
 {
     #[Locked]
@@ -27,11 +29,27 @@ class Sidebar extends Component
         $listeners = [];
 
         if ($this->roomId !== null) {
-            $listeners["echo:update-room-chats.$this->roomId,MessageSent"] = '$refresh';
-            $listeners["echo:update-chat-rooms.$this->roomId,UpdateChatRooms"] = '$refresh';
+            $listeners["echo:update-room-chats.{$this->roomId},MessageSent"] = '$refresh';
+            $listeners["echo:update-chat-rooms.{$this->roomId},UpdateChatRooms"] = 'test';
         }
 
         return array_merge($this->listeners, $listeners);
+    }
+
+    public function updatedRoomId(): array
+    {
+        $this->listeners = [];
+        if ($this->roomId !== null) {
+            $listeners["echo:update-room-chats.{$this->roomId},MessageSent"] = '$refresh';
+            $listeners["echo:update-chat-rooms.{$this->roomId},UpdateChatRooms"] = '$refresh';
+            return array_merge($this->listeners, $listeners);
+        }
+        return [];
+    }
+
+    public function test()
+    {
+        dd($this->roomId);
     }
     public function render(): View
     {
