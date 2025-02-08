@@ -56,7 +56,7 @@ class Delete extends Component
 
             if (!empty($room)) {
                 $room->delete();
-                event(new UpdateChatRooms());
+                event(new UpdateChatRooms(auth()->user()->id, $room->id));
                 $this->dispatch('modal-message', 'Room deleted successfully.');
             } else {
                 $this->dispatch('modal-message', 'Error on deleting room.');

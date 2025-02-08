@@ -63,7 +63,7 @@ class Rename extends Component
             if ($room) {
                 $room->name = $this->room_name;
                 $room->save();
-                event(new UpdateChatRooms());
+                event(new UpdateChatRooms(auth()->user()->id, $room->id));
                 $this->dispatch('close-modal', 'rename-room');
                 $this->dispatch('modal-message', 'Room renamed successfully.');
             } else {

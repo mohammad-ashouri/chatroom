@@ -52,7 +52,7 @@ class Create extends Component
 
         $this->dispatch('room-created');
         $this->dispatch('room-selected', id: $room->id);
-        event(new UpdateChatRooms());
+        event(new UpdateChatRooms(auth()->user()->id, $room->id));
         $this->reset();
     }
     public function render(): View
