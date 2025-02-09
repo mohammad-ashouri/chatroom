@@ -12,6 +12,6 @@ use Illuminate\Support\Facades\Broadcast;
 //    return true;
 //});
 
-Broadcast::channel('update.{roomId}', function ($user, $room_id) {
+Broadcast::channel('update-room-chats.{roomId}', function ($user, $room_id) {
     return Member::where('user_id', $user->id)->where('room_id',$room_id)->exists();
 }, ['guards' => ['web', 'admin']]);

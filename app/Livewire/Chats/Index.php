@@ -43,7 +43,7 @@ class Index extends Component
         $listeners = [];
 
         if ($this->roomId !== null) {
-            $listeners["echo-private:update.{$this->roomId},.MessageSent1"] = '$refresh';
+            $listeners["echo-private:update-room-chats.{$this->roomId},.MessageSent1"] = '$refresh';
         }
 
         return array_merge($this->listeners, $listeners);
