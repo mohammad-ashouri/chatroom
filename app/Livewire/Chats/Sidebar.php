@@ -29,7 +29,7 @@ class Sidebar extends Component
         $listeners = [];
 
         if ($this->roomId !== null) {
-            $listeners["echo-private:update-chat-rooms.{$this->roomId},.UpdateChatRooms1"] = '$refresh';
+            $listeners["echo:update-chat-rooms,.UpdateChatRooms1"] = '$refresh';
         }
 
         return array_merge($this->listeners, $listeners);

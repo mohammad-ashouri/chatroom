@@ -49,6 +49,13 @@ class Index extends Component
         return array_merge($this->listeners, $listeners);
     }
 
+    public function updatedRoomId($newRoomId): void {
+        $this->dispatch('room-changed', [
+            'previousRoomId' => $this->roomId,
+            'newRoomId' => $newRoomId
+        ]);
+    }
+
     #[On('modal-message')]
     public function setModalMessage($message): void
     {
