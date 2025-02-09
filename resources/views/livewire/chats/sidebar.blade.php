@@ -79,4 +79,11 @@
             </div>
         </div>
     </div>
+{{--    @script--}}
+{{--    <script>--}}
+{{--        window.Echo.channel('update-chat-rooms').listen('UpdateChatRooms',(e)=>{--}}
+{{--            $wire.$refresh();--}}
+{{--        });--}}
+{{--    </script>--}}
+{{--    @endscript--}}
 </aside>

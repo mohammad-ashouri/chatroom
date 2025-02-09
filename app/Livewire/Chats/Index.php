@@ -8,15 +8,12 @@ use App\Events\MessageSent;
 use App\Events\UpdateChatRooms;
 use App\Models\Chat;
 use App\Models\Room;
-use App\Models\User;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
-use function Laravel\Prompts\alert;
 
 /**
  * @property-read ?Room $room
@@ -46,22 +43,10 @@ class Index extends Component
         $listeners = [];
 
         if ($this->roomId !== null) {
-            $listeners["echo:update-room-chats.{$this->roomId},MessageSent"] = '$refresh';
-            $listeners["echo:update-chat-rooms.{$this->roomId},UpdateChatRooms"] = '$refresh';
+            $listeners["echo-private:update.{$this->roomId},.MessageSent1"] = '$refresh';
         }
 
         return array_merge($this->listeners, $listeners);
-    }
-
-    public function updatedRoomId(): array
-    {
-        $this->listeners = [];
-        if ($this->roomId !== null) {
-            $listeners["echo:update-room-chats.{$this->roomId},MessageSent"] = '$refresh';
-            $listeners["echo:update-chat-rooms.{$this->roomId},UpdateChatRooms"] = '$refresh';
-            return array_merge($this->listeners, $listeners);
-        }
-        return [];
     }
 
     #[On('modal-message')]
@@ -83,12 +68,10 @@ class Index extends Component
     public function selectRoom(int $id): void
     {
         $this->roomId = $id;
-        $this->updatedRoomId();
     }
 
     /**
      * Send message
-     * @return void
      */
     public function sendMessage(): void
     {
@@ -97,18 +80,16 @@ class Index extends Component
         $chat = Chat::query()->create([
             'user_id' => auth()->id(),
             'room_id' => $this->roomId,
-            'message' => $this->message
+            'message' => $this->message,
         ]);
-        event(new MessageSent(auth()->user()->id, $chat->room_id));
-        event(new UpdateChatRooms(auth()->user()->id, $chat->room_id));
+        broadcast(new MessageSent(auth()->user()->id, $chat->room_id));
+//        event(new UpdateChatRooms(auth()->user()->id, $chat->room_id));
         $this->reset('message');
         $this->isLoading = false;
     }
 
     /**
      * Dispatch chat id
-     * @param $chat_id
-     * @return void
      */
     public function dispatchChatId($chat_id): void
     {
@@ -124,6 +105,7 @@ class Index extends Component
     public function render(): View
     {
         $this->isLoading = false;
+
         return view('livewire.chats.index', [
             'room' => $this->room,
             'chats' => $this->room !== null ? Chat::query()

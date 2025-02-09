@@ -31,10 +31,10 @@ class UpdateChatRooms implements ShouldBroadcast
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return array<int, Channel>
+     * @return Channel
      */
     public function broadcastOn(): Channel
     {
-        return new Channel('update-chat-rooms'.$this->room);
+        return new Channel('update-chat-rooms');
     }
 }

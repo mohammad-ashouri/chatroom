@@ -12,3 +12,9 @@ window.Echo = new Echo({
     forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
     enabledTransports: ['ws', 'wss'],
 });
+
+// let roomId = 14;
+// window.Echo.private(`update.${roomId}`)
+//     .listen('MessageSent1', (e) => {
+//         console.log(e);
+//     });

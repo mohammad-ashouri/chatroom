@@ -20,6 +20,7 @@
         <script>
             dayjs.extend(window.dayjs_plugin_relativeTime);
         </script>
+        @livewireStyles
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -40,4 +41,5 @@
             </main>
         </div>
     </body>
+    @livewireScripts
 </html>
