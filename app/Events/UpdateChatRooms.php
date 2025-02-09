@@ -16,25 +16,31 @@ class UpdateChatRooms implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $user;
-    public $room;
+    public $roomId;
 
     /**
      * Create a new event instance.
      */
     public function __construct($userId, $roomId)
     {
-        $this->room = $roomId;
+        $this->roomId = $roomId;
         $this->user = $userId;
     }
 
+    public function broadcastAs(): string
+    {
+        return 'UpdateChatRooms1';
+    }
 
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return Channel
+     * @return array
      */
-    public function broadcastOn(): Channel
+    public function broadcastOn(): array
     {
-        return new Channel('update-chat-rooms');
+        return [
+            new PrivateChannel('update-chat-rooms.'.$this->roomId)
+        ];
     }
 }

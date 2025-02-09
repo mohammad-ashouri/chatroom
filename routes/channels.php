@@ -8,9 +8,9 @@ use App\Models\Room;
 use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
 
-//Broadcast::channel('update-chat-rooms', function ($user_id, $room_id) {
-//    return true;
-//});
+Broadcast::channel('update-chat-rooms.{roomId}', function ($user, $room_id) {
+    return Member::where('user_id', $user->id)->where('room_id',$room_id)->exists();
+}, ['guards' => ['web', 'admin']]);
 
 Broadcast::channel('update-room-chats.{roomId}', function ($user, $room_id) {
     return Member::where('user_id', $user->id)->where('room_id',$room_id)->exists();

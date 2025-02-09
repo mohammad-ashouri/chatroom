@@ -24,6 +24,17 @@ class Sidebar extends Component
         // Static listeners go here
     ];
 
+    public function getListeners(): array
+    {
+        $listeners = [];
+
+        if ($this->roomId !== null) {
+            $listeners["echo-private:update-chat-rooms.{$this->roomId},.UpdateChatRooms1"] = '$refresh';
+        }
+
+        return array_merge($this->listeners, $listeners);
+    }
+
     public function render(): View
     {
         return view('livewire.chats.sidebar', [

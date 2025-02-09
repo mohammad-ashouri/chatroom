@@ -83,7 +83,7 @@ class Index extends Component
             'message' => $this->message,
         ]);
         broadcast(new MessageSent(auth()->user()->id, $chat->room_id));
-//        event(new UpdateChatRooms(auth()->user()->id, $chat->room_id));
+        broadcast(new UpdateChatRooms(auth()->user()->id, $chat->room_id));
         $this->reset('message');
         $this->isLoading = false;
     }
