@@ -40,12 +40,14 @@ class Sidebar extends Component
         $this->rooms = Room::query()
             ->whereRelation('users', 'users.id', auth()->id())
             ->with(['chats' => function ($query) {
-                $query->latest('created_at');
+                $query->whereNull('deleted_at')
+                    ->where('is_visible', false)
+                    ->latest('created_at');
             }])
             ->orderByRaw("COALESCE(
                         (SELECT MAX(chats.created_at)
                          FROM chats
-                         WHERE chats.room_id = rooms.id),
+                         WHERE chats.room_id = rooms.id ),
                         rooms.created_at
                     ) DESC")
             ->get();
