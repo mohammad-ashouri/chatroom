@@ -31,9 +31,6 @@
                 @forelse ($rooms as $room)
                     <div wire:key="{{$room->id}}" class="bg-white dark:bg-gray-700 shadow-md rounded-lg py-4 cursor-pointer"
                          x-on:click="$dispatch('room-selected', { id: {{ $room->id }} })"
-                         x-init="
-                                Echo.private(`update-room-chats.{{ $room->id }}`).listen('MessageSent1',(e)=>{ $wire.$refresh() });
-                            "
                     >
                         <div class="group flex items-center gap-3 px-4">
                             <figure
