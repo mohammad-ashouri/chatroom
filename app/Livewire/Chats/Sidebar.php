@@ -29,7 +29,7 @@ class Sidebar extends Component
         $listeners = [];
 
         foreach ($this->rooms as $room) {
-            $listeners[sprintf("echo-private:update-room-chats.%s,.MessageSent1", $room->id)] = '$refresh';
+            $listeners[sprintf("echo-private:update-room-chats.%s,.MessageSent1", $room->id)] = 'setRooms';
         }
 
         return array_merge($this->listeners, $listeners);
