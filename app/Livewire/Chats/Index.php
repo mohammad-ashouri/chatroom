@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Livewire\Chats;
 
 use App\Events\MessageSent;
-use App\Events\UpdateChatRooms;
 use App\Models\Chat;
 use App\Models\Room;
 use Illuminate\View\View;
@@ -27,34 +26,86 @@ class Index extends Component
 
     public bool $isLoading;
 
+    public $chats;
     public ?string $messageModal = null;
+
+    public $rooms;
 
     protected $rules = [
         'message' => 'required|string|min:1',
     ];
 
+    /**
+     * Listeners
+     * @var array
+     */
     protected $listeners = [
         // Static listeners go here
     ];
 
+    /**
+     * Get listeners
+     * @return array
+     */
     public function getListeners(): array
     {
         $listeners = [];
 
-        if ($this->roomId !== null) {
-            $listeners["echo:update-room-chats,.MessageSent1"] = '$refresh';
+        foreach ($this->rooms as $room) {
+            $listeners[sprintf("echo-private:update-room-chats.%s,.MessageSent1", $room->id)] = '$refresh';
         }
 
         return array_merge($this->listeners, $listeners);
     }
 
-    public function updatedRoomId($newRoomId): void {
-        $this->dispatch('room-changed', [
-            'previousRoomId' => $this->roomId,
-            'newRoomId' => $newRoomId
-        ]);
+    public function setRooms(): void
+    {
+        $this->rooms = Room::query()
+            ->whereRelation('users', 'users.id', auth()->id())
+            ->with(['chats' => function ($query) {
+                $query->latest('created_at');
+            }])
+            ->orderByRaw("COALESCE(
+                        (SELECT MAX(chats.created_at)
+                         FROM chats
+                         WHERE chats.room_id = rooms.id),
+                        rooms.created_at
+                    ) DESC")
+            ->get();
     }
 
+    public function mount(): void
+    {
+        $this->setRooms();
+    }
+
+    /**
+     * Update chats
+     * @return void
+     */
+    public function updateChats(): void
+    {
+        $this->chats = Chat::query()
+            ->where('room_id', $this->roomId)
+            ->where('is_visible', false)
+            ->whereNot(function ($query) {
+                $query->where('user_id', auth()->id())
+                    ->where('is_visible', true);
+            })
+            ->orWhere(function ($query) {
+                $query->where('room_id', $this->roomId)
+                    ->where('is_visible', true)
+                    ->where('user_id', '!=', auth()->id());
+            })
+            ->orderBy('created_at')
+            ->get();
+    }
+
+    /**
+     * Set modal message and open modal
+     * @param $message
+     * @return void
+     */
     #[On('modal-message')]
     public function setModalMessage($message): void
     {
@@ -88,7 +139,7 @@ class Index extends Component
             'room_id' => $this->roomId,
             'message' => $this->message,
         ]);
-        broadcast(new MessageSent(auth()->user()->id, $chat->room_id));
+        event(new MessageSent(auth()->user()->id, $chat->room_id));
         $this->reset('message');
         $this->isLoading = false;
     }
@@ -109,24 +160,12 @@ class Index extends Component
 
     public function render(): View
     {
+        $this->updateChats();
         $this->isLoading = false;
 
         return view('livewire.chats.index', [
             'room' => $this->room,
-            'chats' => $this->room !== null ? Chat::query()
-                ->where('room_id', $this->roomId)
-                ->where('is_visible', false)
-                ->whereNot(function ($query) {
-                    $query->where('user_id', auth()->id())
-                        ->where('is_visible', true);
-                })
-                ->orWhere(function ($query) {
-                    $query->where('room_id', $this->roomId)
-                        ->where('is_visible', true)
-                        ->where('user_id', '!=', auth()->id());
-                })
-                ->orderBy('created_at')
-                ->get() : [],
+            'chats' => $this->chats !== null ,
         ]);
     }
 }

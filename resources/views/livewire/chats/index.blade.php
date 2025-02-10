@@ -91,6 +91,10 @@
                 @forelse ($chats as $chat)
                     @php($isCurrentUser = $chat->user->id === auth()->user()->id)
                     <div
+                        wire:key="{{$chat->id}}"
+                        x-init="
+                                Echo.private(`update-room-chats.{{ $room->id }}`).listen('MessageSent1',(e)=>{ $wire.$refresh() });
+                            "
                         @class([
                         'flex items-center space-x-2',
                         'justify-end' => $isCurrentUser,

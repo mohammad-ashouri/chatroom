@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Rooms;
 
+use App\Events\MessageSent;
 use App\Events\UpdateChatRooms;
 use App\Models\Room;
 use Livewire\Attributes\Validate;
@@ -63,7 +64,7 @@ class Rename extends Component
             if ($room) {
                 $room->name = $this->room_name;
                 $room->save();
-                event(new UpdateChatRooms(auth()->user()->id, $room->id));
+                event(new MessageSent(auth()->user()->id, $room->id));
                 $this->dispatch('close-modal', 'rename-room');
                 $this->dispatch('modal-message', 'Room renamed successfully.');
             } else {

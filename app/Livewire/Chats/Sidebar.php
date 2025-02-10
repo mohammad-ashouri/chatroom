@@ -13,7 +13,6 @@ use Livewire\Component;
 
 #[On('room-created')]
 #[On('room-selected')]
-
 class Sidebar extends Component
 {
     #[Url]
@@ -23,32 +22,44 @@ class Sidebar extends Component
         // Static listeners go here
     ];
 
+    public $rooms;
+
     public function getListeners(): array
     {
         $listeners = [];
 
-        if ($this->roomId !== null) {
-            $listeners["echo:update-room-chats,.MessageSent1"] = '$refresh';
+        foreach ($this->rooms as $room) {
+            $listeners[sprintf("echo-private:update-room-chats.%s,.MessageSent1", $room->id)] = '$refresh';
         }
 
         return array_merge($this->listeners, $listeners);
     }
 
-    public function render(): View
+    public function setRooms(): void
     {
-        return view('livewire.chats.sidebar', [
-            'rooms' => Room::query()
-                        ->whereRelation('users', 'users.id', auth()->id())
-                        ->with(['chats' => function ($query) {
-                            $query->latest('created_at');
-                        }])
-                        ->orderByRaw("COALESCE(
+        $this->rooms = Room::query()
+            ->whereRelation('users', 'users.id', auth()->id())
+            ->with(['chats' => function ($query) {
+                $query->latest('created_at');
+            }])
+            ->orderByRaw("COALESCE(
                         (SELECT MAX(chats.created_at)
                          FROM chats
                          WHERE chats.room_id = rooms.id),
                         rooms.created_at
                     ) DESC")
-            ->get(),
+            ->get();
+    }
+
+    public function mount(): void
+    {
+        $this->setRooms();
+    }
+
+    public function render(): View
+    {
+        return view('livewire.chats.sidebar', [
+            'rooms' => $this->rooms,
         ]);
     }
 }
