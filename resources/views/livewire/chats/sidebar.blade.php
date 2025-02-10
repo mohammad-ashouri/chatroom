@@ -30,7 +30,11 @@
             <div class="flex flex-col gap-4">
                 @forelse ($rooms as $room)
                     <div class="bg-white dark:bg-gray-700 shadow-md rounded-lg py-4 cursor-pointer"
-                         x-on:click="$dispatch('room-selected', { id: {{ $room->id }} })">
+                         x-on:click="$dispatch('room-selected', { id: {{ $room->id }} })"
+                         x-init="
+                                Echo.channel(`update-room-chats`).listen('MessageSent1',(e)=>{ $wire.$refresh() });
+                            "
+                    >
                         <div class="group flex items-center gap-3 px-4">
                             <figure
                                 class="rounded h-10 w-10 flex-shrink-0 transition-opacity group-hover:opacity-90 {{ $room->user->profile }}">
@@ -79,11 +83,4 @@
             </div>
         </div>
     </div>
-{{--    @script--}}
-{{--    <script>--}}
-{{--        window.Echo.channel('update-chat-rooms').listen('UpdateChatRooms',(e)=>{--}}
-{{--            $wire.$refresh();--}}
-{{--        });--}}
-{{--    </script>--}}
-{{--    @endscript--}}
 </aside>

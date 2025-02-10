@@ -20,7 +20,6 @@ use Livewire\Component;
  */
 class Index extends Component
 {
-    #[Locked]
     #[Url]
     public ?int $roomId = null;
 
@@ -43,7 +42,7 @@ class Index extends Component
         $listeners = [];
 
         if ($this->roomId !== null) {
-            $listeners["echo-private:update-room-chats.{$this->roomId},.MessageSent1"] = '$refresh';
+            $listeners["echo:update-room-chats,.MessageSent1"] = '$refresh';
         }
 
         return array_merge($this->listeners, $listeners);
@@ -90,7 +89,6 @@ class Index extends Component
             'message' => $this->message,
         ]);
         broadcast(new MessageSent(auth()->user()->id, $chat->room_id));
-        broadcast(new UpdateChatRooms(auth()->user()->id, $chat->room_id));
         $this->reset('message');
         $this->isLoading = false;
     }

@@ -16,7 +16,6 @@ use Livewire\Component;
 
 class Sidebar extends Component
 {
-    #[Locked]
     #[Url]
     public ?int $roomId = null;
 
@@ -29,7 +28,7 @@ class Sidebar extends Component
         $listeners = [];
 
         if ($this->roomId !== null) {
-            $listeners["echo:update-chat-rooms,.UpdateChatRooms1"] = '$refresh';
+            $listeners["echo:update-room-chats,.MessageSent1"] = '$refresh';
         }
 
         return array_merge($this->listeners, $listeners);

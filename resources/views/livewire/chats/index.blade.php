@@ -90,7 +90,8 @@
             <div class="flex flex-col gap-4">
                 @forelse ($chats as $chat)
                     @php($isCurrentUser = $chat->user->id === auth()->user()->id)
-                    <div @class([
+                    <div
+                        @class([
                         'flex items-center space-x-2',
                         'justify-end' => $isCurrentUser,
                     ])>
