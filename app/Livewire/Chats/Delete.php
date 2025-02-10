@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Chats;
 
+use App\Events\MessageSent;
 use App\Models\Chat;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -10,6 +11,7 @@ class Delete extends Component
 {
     public Chat $chat;
     public bool $is_visible = false;
+
     #[On('chat-id')]
     public function showDeleteChatModal($chat_id): void
     {
@@ -26,5 +28,6 @@ class Delete extends Component
             $this->chat->delete();
         }
         $this->dispatch('close-modal', 'delete-chat');
+        event(new MessageSent(auth()->user()->id, $this->chat->room_id));
     }
 }
