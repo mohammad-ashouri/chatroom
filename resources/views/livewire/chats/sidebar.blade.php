@@ -29,7 +29,8 @@
             class="mt-4 h-[calc(100vh-155px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             <div class="flex flex-col gap-4">
                 @forelse ($rooms as $room)
-                    <div wire:key="{{$room->id}}" class="bg-white dark:bg-gray-700 shadow-md rounded-lg py-4 cursor-pointer"
+                    <div wire:key="{{$room->id}}"
+                         class="bg-white dark:bg-gray-700 shadow-md rounded-lg py-4 cursor-pointer"
                          x-on:click="$dispatch('room-selected', { id: {{ $room->id }} })"
                     >
                         <div class="group flex items-center gap-3 px-4">

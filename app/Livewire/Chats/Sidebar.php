@@ -11,15 +11,13 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
-#[On('room-created')]
-#[On('room-selected')]
 class Sidebar extends Component
 {
     #[Url]
     public ?int $roomId = null;
 
     protected $listeners = [
-        // Static listeners go here
+        "echo:rooms,.room.created" => 'setRooms',
     ];
 
     public $rooms;
