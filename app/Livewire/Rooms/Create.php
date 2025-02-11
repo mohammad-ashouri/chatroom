@@ -50,11 +50,9 @@ class Create extends Component
         $validated['members'][] = auth()->id();
 
         $room->users()->attach($validated['members']);
-
+        $this->dispatch('close-modal', 'create-room');
         $this->dispatch('room-selected', id: $room->id);
         event(new MessageSent(auth()->user()->id, $room->id));
-        $rooms=Room::all();
-        $this->dispatch('rooms-updated', rooms: $rooms);
         event(new RoomCreated($room));
         $this->reset();
     }
