@@ -25,8 +25,8 @@ class Member extends Component
 
     public function mount(): void
     {
-        $this->allMembers = User::orderBy('name')->get();
         $this->room = Room::findOrFail($this->room_id);
+        $this->allMembers = User::orderBy('name')->get();
     }
 
     /**
@@ -48,5 +48,7 @@ class Member extends Component
         foreach ($removedMembers as $removedUserId) {
             event(new RemovedFromRoom($this->room_id, $removedUserId));
         }
+
+        $this->dispatch('close-modal', 'room-members');
     }
 }
