@@ -3,10 +3,11 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "npm-run-all build-app mkdir-plugins-directory copy-dayjs",
+        "build": "npm-run-all build-app mkdir-plugins-directory copy-dayjs copy-tom-select",
         "build-app": "vite build",
         "mkdir-plugins-directory": "mkdirp public/build/plugins",
-        "copy-dayjs": "ncp node_modules/dayjs public/build/plugins/dayjs"
+        "copy-dayjs": "ncp node_modules/dayjs public/build/plugins/dayjs",
+        "copy-tom-select": "ncp node_modules/tom-select public/build/plugins/tom-select"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.2",
@@ -23,6 +24,7 @@
         "dayjs": "^1.11.13",
         "mkdirp": "^3.0.1",
         "ncp": "^2.0.0",
-        "npm-run-all": "^4.1.5"
+        "npm-run-all": "^4.1.5",
+        "tom-select": "^2.4.2"
     }
 }

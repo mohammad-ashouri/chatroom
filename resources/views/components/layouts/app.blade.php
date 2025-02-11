@@ -11,12 +11,14 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <link href="/build/plugins/tom-select/dist/css/tom-select.css" rel="stylesheet">
+        <script src="/build/plugins/tom-select/dist/js/tom-select.complete.min.js"></script>
 
         <script src="/build/plugins/dayjs/dayjs.min.js"></script>
         <script src="/build/plugins/dayjs/plugin/relativeTime.js"></script>
+
+        <!-- Scripts -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
         <script>
             dayjs.extend(window.dayjs_plugin_relativeTime);
         </script>
