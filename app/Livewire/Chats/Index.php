@@ -41,24 +41,23 @@ class Index extends Component
      * @var array
      */
     protected $listeners = [
-        // Static listeners go here
     ];
 
     /**
      * Get listeners
      * @return array
      */
-    public function getListeners(): array
-    {
-        $listeners = [];
-
-        foreach ($this->rooms as $room) {
-            $listeners[sprintf("echo-private:update-room-chats.%s,.MessageSent1", $room->id)] = '$refresh';
-            $listeners[sprintf("echo-private:removed-from-room.%s,.RemovedFromRoom", $room->id)] = '$refresh';
-        }
-
-        return array_merge($this->listeners, $listeners);
-    }
+//    public function getListeners(): array
+//    {
+//        $listeners = [];
+//
+//        foreach ($this->rooms as $room) {
+//            $listeners[sprintf("echo-private:update-room-chats.%s,.MessageSent1", $room->id)] = 'updateChats';
+//            $listeners[sprintf("echo-private:removed-from-room.%s,.RemovedFromRoom", $room->id)] = 'updateChats';
+//        }
+//
+//        return array_merge($this->listeners, $listeners);
+//    }
 
     public function setRooms(): void
     {
@@ -87,20 +86,16 @@ class Index extends Component
      */
     public function updateChats(): void
     {
-        if ($this->roomId != null) {
-            $room = Room::find($this->roomId);
-
-            if ($room && $room->users->contains(auth()->user()->id)) {
-                $this->chats = Chat::where('room_id', $this->roomId)
-                    ->where(function ($query) {
-                        $query->where('is_visible', true)
-                            ->orWhere('user_id', auth()->user()->id);
-                    })
-                    ->orderBy('created_at')
-                    ->get();
-            } else {
-                $this->chats = [];
-            }
+        $checkRoom = Room::where('id', $this->roomId)->exists();
+        if ($this->roomId != null and $checkRoom) {
+            $this->chats = Chat::where('room_id', $this->roomId)
+                ->where(function ($query) {
+                    $query->where('is_visible', false);
+                })
+                ->orderBy('created_at')
+                ->get();
+        } else {
+            $this->chats = [];
         }
     }
 

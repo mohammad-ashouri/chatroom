@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Livewire\Rooms;
 
 use App\Events\MessageSent;
-use App\Events\UpdateChatRooms;
 use App\Models\Room;
 use Livewire\Component;
 
@@ -58,6 +57,7 @@ class Delete extends Component
             if (!empty($room)) {
                 $room->delete();
                 event(new MessageSent(auth()->user()->id, $room->id));
+                $this->dispatch('$refresh');
                 $this->dispatch('modal-message', 'Room deleted successfully.');
             } else {
                 $this->dispatch('modal-message', 'Error on deleting room.');

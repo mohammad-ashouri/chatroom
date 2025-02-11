@@ -51,11 +51,11 @@ class Create extends Component
 
         $room->users()->attach($validated['members']);
 
-        $this->dispatch('room-created');
         $this->dispatch('room-selected', id: $room->id);
         event(new MessageSent(auth()->user()->id, $room->id));
-        $room=Room::find($room->id);
-        broadcast(new RoomCreated($room));
+        $rooms=Room::all();
+        $this->dispatch('rooms-updated', rooms: $rooms);
+        event(new RoomCreated($room));
         $this->reset();
     }
     public function render(): View

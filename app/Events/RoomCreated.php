@@ -33,7 +33,7 @@ class RoomCreated implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        return [new Channel('rooms')];
+        return [new Channel('room-created')];
     }
 
     /**
@@ -42,6 +42,6 @@ class RoomCreated implements ShouldBroadcast
      */
     public function broadcastAs(): string
     {
-        return 'room.created';
+        return 'RoomCreated';
     }
 }

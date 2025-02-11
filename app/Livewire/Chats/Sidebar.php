@@ -17,27 +17,32 @@ class Sidebar extends Component
     public ?int $roomId = null;
 
     protected $listeners = [
-        "echo:rooms,.room.created" => 'setRooms',
+        'echo:room-created,.RoomCreated' => 'executeJsCode',
     ];
+    public function executeJsCode(){
+        $this->setRooms();
+        $this->dispatch('custom-js-event', ['rooms' => $this->rooms]);
+        $this->dispatch('$refresh')->self();
+    }
 
     public $rooms;
 
-    public function getListeners(): array
-    {
-        $listeners = [];
-
-        foreach ($this->rooms as $room) {
-            $listeners[sprintf("echo-private:update-room-chats.%s,.MessageSent1", $room->id)] = 'setRooms';
-            $listeners[sprintf("echo-private:removed-from-room.%s,.RemovedFromRoom", $room->id)] = 'setRooms';
-        }
-
-        return array_merge($this->listeners, $listeners);
-    }
+//    public function getListeners(): array
+//    {
+//        $listeners = [];
+//
+//        foreach ($this->rooms as $room) {
+//            $listeners[sprintf("echo-private:update-room-chats.%s,.MessageSent1", $room->id)] = 'setRooms';
+//            $listeners[sprintf("echo-private:removed-from-room.%s,.RemovedFromRoom", $room->id)] = 'setRooms';
+//        }
+//
+//        return array_merge($this->listeners, $listeners);
+//    }
 
     public function setRooms(): void
     {
         $this->rooms = Room::query()
-            ->whereRelation('users', 'users.id', auth()->id())
+            ->whereRelation('users', 'users.id', auth()->user()->id)
             ->with(['chats' => function ($query) {
                 $query->whereNull('deleted_at')
                     ->where('is_visible', false)
@@ -63,4 +68,5 @@ class Sidebar extends Component
             'rooms' => $this->rooms,
         ]);
     }
+
 }
