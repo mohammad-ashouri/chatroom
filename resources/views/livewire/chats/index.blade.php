@@ -63,6 +63,25 @@
                             </div>
                         </x-modal>
                     @endif
+                    <button type="button"
+                            wire:click="$dispatch('open-modal', 'room-members')"
+                            class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded flex items-center justify-center">
+                        Members
+                    </button>
+                    <x-modal class="" name="room-members">
+                        <div class="p-4 h-auto">
+                            <div class="flex items-center justify-between">
+                                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 leading-tight">
+                                    Members
+                                </h2>
+                                <button x-on:click="$dispatch('close-modal', 'room-members')"
+                                        class="text-gray-500 dark:text-gray-400">
+                                    <x-icons.x class="h-6 w-6"/>
+                                </button>
+                            </div>
+                            <livewire:rooms.member :room_id="$room->id"/>
+                        </div>
+                    </x-modal>
                 @else
                     <p class="text-xl font-bold text-gray-800 dark:text-gray-100">
                         Please select room.
@@ -92,9 +111,6 @@
                     @php($isCurrentUser = $chat->user->id === auth()->user()->id)
                     <div
                         wire:key="{{$chat->id}}"
-                        x-init="
-                                Echo.private(`update-room-chats.{{ $room->id }}`).listen('MessageSent1',(e)=>{ $wire.$refresh() });
-                            "
                         @class([
                         'flex items-center space-x-2',
                         'justify-end' => $isCurrentUser,
@@ -168,7 +184,8 @@
             <div class="mt-4">
                 <form wire:submit="sendMessage">
                     <div class="flex items-center gap-3">
-                        <input type="text" placeholder="Send a message..." wire:model="message" class="w-full rounded-lg border-gray-300"/>
+                        <input type="text" placeholder="Send a message..." wire:model="message"
+                               class="w-full rounded-lg border-gray-300"/>
                         <button type="submit"
                                 wire:loading.attr="disabled"
                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center"

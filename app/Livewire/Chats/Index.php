@@ -54,6 +54,7 @@ class Index extends Component
 
         foreach ($this->rooms as $room) {
             $listeners[sprintf("echo-private:update-room-chats.%s,.MessageSent1", $room->id)] = '$refresh';
+            $listeners[sprintf("echo-private:removed-from-room.%s,.RemovedFromRoom", $room->id)] = '$refresh';
         }
 
         return array_merge($this->listeners, $listeners);
@@ -98,7 +99,7 @@ class Index extends Component
                     ->orderBy('created_at')
                     ->get();
             } else {
-                abort(403);
+                $this->chats = [];
             }
         }
     }
