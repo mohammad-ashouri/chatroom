@@ -6,6 +6,7 @@ namespace App\Livewire\Chats;
 
 use App\Events\MessageSent;
 use App\Models\Chat;
+use App\Models\Member;
 use App\Models\Room;
 use Illuminate\View\View;
 use Livewire\Attributes\Computed;
@@ -26,7 +27,7 @@ class Index extends Component
 
     public bool $isLoading;
 
-    public $chats;
+    public $chats = [];
     public ?string $messageModal = null;
 
     public $rooms;
@@ -85,20 +86,21 @@ class Index extends Component
      */
     public function updateChats(): void
     {
-        $this->chats = Chat::query()
-            ->where('room_id', $this->roomId)
-            ->where('is_visible', false)
-            ->whereNot(function ($query) {
-                $query->where('user_id', auth()->id())
-                    ->where('is_visible', true);
-            })
-            ->orWhere(function ($query) {
-                $query->where('room_id', $this->roomId)
-                    ->where('is_visible', true)
-                    ->where('user_id', '!=', auth()->id());
-            })
-            ->orderBy('created_at')
-            ->get();
+        if ($this->roomId != null) {
+            $room = Room::find($this->roomId);
+
+            if ($room && $room->users->contains(auth()->user()->id)) {
+                $this->chats = Chat::where('room_id', $this->roomId)
+                    ->where(function ($query) {
+                        $query->where('is_visible', true)
+                            ->orWhere('user_id', auth()->user()->id);
+                    })
+                    ->orderBy('created_at')
+                    ->get();
+            } else {
+                abort(403);
+            }
+        }
     }
 
     /**
@@ -165,7 +167,7 @@ class Index extends Component
 
         return view('livewire.chats.index', [
             'room' => $this->room,
-            'chats' => $this->chats !== null ,
+            'chats' => $this->chats !== null,
         ]);
     }
 }
