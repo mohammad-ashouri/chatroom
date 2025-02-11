@@ -198,4 +198,29 @@
             </div>
         @endif
     </div>
+    @script
+    <script>
+        document.addEventListener('livewire:load', function () {
+            const rooms = @json($rooms);
+
+            connectToRoomChannels(rooms);
+
+            function connectToRoomChannels(rooms) {
+                rooms.forEach(room => {
+                    Echo.private(`update-room-chats.${room.id}`)
+                        .listen('.MessageSent1', (e) => {
+                            Livewire.dispatch('setRooms', e);
+                        });
+                });
+            }
+
+            Livewire.on('rooms', (newRooms) => {
+                Echo.leaveAll();
+
+                connectToRoomChannels(newRooms);
+            });
+        });
+    </script>
+
+    @endscript
 </div>
