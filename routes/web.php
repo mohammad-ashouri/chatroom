@@ -13,6 +13,8 @@ Route::middleware('auth')
     ->group(function (): void {
         Route::get('dashboard', Dashboard::class)
             ->name('dashboard');
+        Route::redirect('dashboard', 'chats');
+
 
         Route::get('profile', Profile::class)
             ->name('profile');

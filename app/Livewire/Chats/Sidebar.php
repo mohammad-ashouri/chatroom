@@ -18,26 +18,14 @@ class Sidebar extends Component
 
     protected $listeners = [
         'echo:room-created,.RoomCreated' => 'executeJsCode',
+        'updateChats' => 'setRooms',
     ];
     public function executeJsCode(){
         $this->setRooms();
-        $this->dispatch('custom-js-event', ['rooms' => $this->rooms]);
         $this->dispatch('$refresh')->self();
     }
 
     public $rooms;
-
-//    public function getListeners(): array
-//    {
-//        $listeners = [];
-//
-//        foreach ($this->rooms as $room) {
-//            $listeners[sprintf("echo-private:update-room-chats.%s,.MessageSent1", $room->id)] = 'setRooms';
-//            $listeners[sprintf("echo-private:removed-from-room.%s,.RemovedFromRoom", $room->id)] = 'setRooms';
-//        }
-//
-//        return array_merge($this->listeners, $listeners);
-//    }
 
     public function setRooms(): void
     {
