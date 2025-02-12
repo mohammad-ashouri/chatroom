@@ -7,7 +7,7 @@ use App\Livewire\Pages\Dashboard;
 use App\Livewire\Pages\Profile;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome');
+Route::redirect('/', 'login');
 
 Route::middleware('auth')
     ->group(function (): void {
