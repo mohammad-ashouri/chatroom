@@ -2,12 +2,20 @@
     <div class="container mx-auto px-4 py-4">
         <div class="flex justify-between items-center">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Chats</h1>
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded"
-                    x-on:click="$dispatch('open-modal', 'create-room')"
-                    title="Create Room"
-            >
-                <x-icons.add class="h-6 w-6"/>
-            </button>
+            <div>
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded"
+                        x-on:click="$dispatch('open-modal', 'create-room')"
+                        title="Create Room"
+                >
+                    Create Room
+                </button>
+                <button class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-2 rounded"
+                        x-on:click="$dispatch('open-modal', 'create-private-chat')"
+                        title="Private Chat"
+                >
+                    Private Chat
+                </button>
+            </div>
             <x-modal name="create-room">
                 <div class="p-4">
                     <div class="flex items-center justify-between">
@@ -22,6 +30,39 @@
                     </div>
 
                     <livewire:rooms.create/>
+                </div>
+            </x-modal>
+            <x-modal name="create-private-chat">
+                <div class="p-4 h-64">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 leading-tight">
+                            Private Chat
+                        </h2>
+                        <button x-on:click="$dispatch('close-modal', 'create-private-chat')"
+                                x-on:private-chat-created.window="$dispatch('close-modal', 'create-private-chat')"
+                                class="text-gray-500 dark:text-gray-400">
+                            <x-icons.x class="h-6 w-6"/>
+                        </button>
+                    </div>
+                    <div
+                        x-data
+                        x-init="
+                            const tomSelectInstance = new TomSelect($refs.selectUser, {
+                            })
+                        ">
+                        <select x-ref="selectUser"
+                                class="bg-gray-50 mt-3 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option value="" selected disabled>Select or search user...</option>
+                            @foreach($allUsers as $user)
+                                <option value="{{ $user->id }}">
+                                    {{ $user->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 p-4 mt-4">
+                    <x-primary-button>{{ __('Start Chat') }}</x-primary-button>
                 </div>
             </x-modal>
         </div>
