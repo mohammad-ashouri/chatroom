@@ -198,4 +198,5 @@
             </div>
         @endif
     </div>
+    <x-js-scripts :rooms="$this->rooms"/>
 </div>
