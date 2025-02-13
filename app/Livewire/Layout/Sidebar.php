@@ -35,12 +35,6 @@ class Sidebar extends Component
     public $rooms;
 
     /**
-     * All users for private chats
-     * @var
-     */
-    public $allUsers = [];
-
-    /**
      * Set and load user rooms
      * @return void
      */
@@ -69,19 +63,10 @@ class Sidebar extends Component
             ->get();
     }
 
-    /**
-     * Load all users for start private chat
-     * @return void
-     */
-    public function loadUsers(): void
-    {
-        $this->allUsers = User::where('id', '!=', auth()->user()->id)->where('status',true)->get();
-    }
 
     public function mount(): void
     {
         $this->setRooms();
-        $this->loadUsers();
     }
 
     public function render(): View
