@@ -33,7 +33,14 @@ class Sidebar extends Component
             ->whereRelation('users', 'users.id', auth()->user()->id)
             ->with(['chats' => function ($query) {
                 $query->whereNull('deleted_at')
-                    ->where('is_visible', false)
+                    ->where(function ($query) {
+                        $query->where(function ($subQuery) {
+                            $subQuery->where('user_id', auth()->user()->id)
+                                ->where('is_visible', false);
+                        })->orWhere(function ($subQuery) {
+                            $subQuery->where('user_id', '!=', auth()->user()->id);
+                        });
+                    })
                     ->latest('created_at');
             }])
             ->orderByRaw("COALESCE(
