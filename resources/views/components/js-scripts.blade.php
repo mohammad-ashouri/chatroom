@@ -9,13 +9,11 @@
         if ($wire.roomId !== null) {
             Echo.private(`update-room-chats.${$wire.roomId}`)
                 .listen('.MessageSent1', (data) => {
-                    console.log('MessageSent1:', data);
                     Livewire.dispatch('updateChats', data);
                 });
 
             Echo.private(`removed-from-room.${$wire.roomId}`)
                 .listen('.RemovedFromRoom', (data) => {
-                    console.log('RemovedFromRoom:', data);
                     Livewire.dispatch('updateChats', data);
                 });
         }

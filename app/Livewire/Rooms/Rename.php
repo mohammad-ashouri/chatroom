@@ -3,7 +3,6 @@
 namespace App\Livewire\Rooms;
 
 use App\Events\MessageSent;
-use App\Events\UpdateChatRooms;
 use App\Models\Room;
 use Livewire\Attributes\Validate;
 use Livewire\Component;

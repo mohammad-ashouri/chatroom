@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Livewire\Chats;
+namespace App\Livewire\Layout;
 
 use App\Models\Room;
 use Illuminate\View\View;
-use Livewire\Attributes\Locked;
-use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
@@ -59,7 +57,7 @@ class Sidebar extends Component
 
     public function render(): View
     {
-        return view('livewire.chats.sidebar', [
+        return view('livewire.layout.sidebar', [
             'rooms' => $this->rooms,
         ]);
     }
