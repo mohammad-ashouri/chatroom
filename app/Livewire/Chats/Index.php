@@ -75,10 +75,18 @@ class Index extends Component
         if ($this->roomId != null and $checkRoom) {
             $this->chats = Chat::where('room_id', $this->roomId)
                 ->where(function ($query) {
-                    $query->where('is_visible', false);
+                    $query->when(auth()->check(), function ($query) {
+                        $query->where(function ($subQuery) {
+                            $subQuery->where('user_id', auth()->user()->id)
+                                ->where('is_visible', false);
+                        })->orWhere(function ($subQuery) {
+                            $subQuery->where('user_id', '!=', auth()->user()->id);
+                        });
+                    });
                 })
                 ->orderBy('created_at')
                 ->get();
+
         } else {
             $this->chats = [];
         }
